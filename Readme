@@ -1,0 +1,28 @@
+Part 1 – Development Project (50%)
+Your task is to develop a CRUD (Create, Read, Update, Delete) 
+Market Place web application using PHP and Symfony. Your 
+implementation should utilise all relevant framework features as 
+covered in the workshops and follow best development practice.
+Your application should include user management, allowing users to 
+register new accounts and log in/out.
+As core features your application should allow the management of 
+adverts. Adverts need to contain a title, description, and the user
+who created it. For higher marks this may be extended to include 
+further information such as price, location and (managed) 
+categories.
+Anyone (i.e. no user account required) should be able to browse 
+existing adverts. There should be a list view of all advert titles
+(potentially paginated for higher marks) as well as individual pages
+showing full advert details when clicking on a title in the list view.
+Logged-in users should be able to create new adverts as well as edit 
+and delete their own existing adverts. For higher marks you may 
+consider implementing additional roles (such as moderator and 
+admin where moderators might be allowed to edit/delete anyone’s 
+adverts and admins might be allowed to promote/demote
+moderators and delete user accounts).
+Adequate application security should be put in place utilising the 
+framework’s authentication and authorisation mechanisms.
+For higher marks you may consider additional features that enhance 
+the application and demonstrate independent research and a 
+deeper understanding of the used technologies (such as the ability 
+to upload and display images for adverts)

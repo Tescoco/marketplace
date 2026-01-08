@@ -1,0 +1,66 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block page_title %}
+  {{ currentUser ? 'My Ads' : 'Browse All Ads' }}
+{% endblock %}
+
+{% block page_actions %}
+    {% if is_granted('ROLE_USER') %}
+        <a href="{{ path('new_ads') }}" class="btn btn-primary">+ Post New Ad</a>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    {% if ads|length > 0 %}
+        <div class="ads-grid">
+            {% for ad in ads %}
+                <div class="ad-card">
+                    <a href="{{ path('view_ad', {'id': ad.id}) }}" style="text-decoration: none; color: inherit;">
+                        {% if ad.imageUrl %}
+                            <img src="{{ asset('uploads/ads/' ~ ad.imageUrl) }}" alt="{{ ad.title }}" class="ad-card-image">
+                        {% else %}
+                            <img src="{{ asset('jiji.png') }}" alt="{{ ad.title }}" class="ad-card-image">
+                        {% endif %}
+                        <div class="ad-card-body">
+                            <h3 class="ad-card-title">{{ ad.title }}</h3>
+                            <p class="ad-card-description">{{ ad.description }}</p>
+                            <div class="ad-card-meta">
+                                <div>
+                                    <div class="ad-card-price">£{{ ad.price|number_format }}</div>
+                                    <div class="ad-card-location"> {{ ad.location }}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="badge badge-primary">{% if ad.category %}{{ ad.category.name }}{% else %}Uncategorized{% endif %}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% if (is_granted("ROLE_USER") and currentUser and ad.user.id == currentUser.id) or is_granted("ROLE_MODERATOR") %}
+                        <div class="ad-card-actions">
+                            {% if is_granted("ROLE_USER") and currentUser and ad.user.id == currentUser.id %}
+                                <a href="{{ path('edit_ad', {'id': ad.id}) }}" class="btn btn-secondary btn-sm">Edit</a>
+                            {% endif %}
+                            <a href="{{ path('delete_ad', {'id': ad.id}) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this ad?')"> Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon"></div>
+            <h2 class="empty-state-title">No Ads Found</h2>
+            <p class="empty-state-text">
+                {% if currentUser %}
+                    You haven't posted any ads yet. Start by creating your first advertisement!
+                {% else %}
+                    There are no ads available at the moment. Check back later!
+                {% endif %}
+            </p>
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('new_ads') }}" class="btn btn-primary">Post Your First Ad</a>
+            {% endif %}
+        </div>
+    {% endif %}
+{{ knp_pagination_render(ads) }} 
+{% endblock %}

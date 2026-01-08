@@ -1,0 +1,72 @@
+{% extends "layouts/main.html.twig" %}
+
+{% block page_title %}
+  {{ ad.title }}
+{% endblock %}
+
+{% block page_content %}
+<div class="ad-detail">
+    <div class="ad-detail-header">
+        <div class="ad-detail-title">{{ ad.title }}</div>
+        <div class="ad-detail-category">{% if ad.category %}{{ ad.category.name }}{% else %}Uncategorized{% endif %}</div>
+        
+        {% if (is_granted("ROLE_USER") and currentUser and ad.user.id == currentUser.id) or is_granted("ROLE_MODERATOR") %}
+            <div class="ad-detail-actions">
+                <a href="{{ path('edit_ad', {'id': ad.id}) }}" class="btn btn-secondary">Edit</a>
+                <a href="{{ path('delete_ad', {'id': ad.id}) }}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this ad?')">Delete</a>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="ad-detail-body">
+        <div>
+            {% if ad.imageUrl %}
+                <img src="{{ asset('uploads/ads/' ~ ad.imageUrl) }}" alt="{{ ad.title }}" class="ad-detail-image">
+            {% else %}
+                <img src="{{ asset('jiji.png') }}" alt="{{ ad.title }}" class="ad-detail-image">
+            {% endif %}
+        </div>
+        
+        <div class="ad-detail-info">
+            <h3>Description</h3>
+            <p class="ad-detail-description">{{ ad.description }}</p>
+            
+            <div class="ad-detail-meta">
+                <div class="meta-item">
+                    <div class="meta-label">Price</div>
+                    <div class="meta-value price">£{{ ad.price|number_format }}</div>
+                </div>
+                
+                <div class="meta-item">
+                    <div class="meta-label">Location</div>
+                    <div class="meta-value"> {{ ad.location }}</div>
+                </div>
+                
+                <div class="meta-item">
+                    <div class="meta-label">Quantity</div>
+                    <div class="meta-value">{{ ad.quantity }} available</div>
+                </div>
+                
+                 {% if is_granted("ROLE_USER") %}
+                <div class="meta-item">
+                    <div class="meta-label">Posted By</div>
+                    <div class="meta-value">{{ ad.user.email }}</div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-4">
+                {% if is_granted("ROLE_USER") %}
+                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ ad.user.email|url_encode }}&su={{ ('Inquiry about ' ~ ad.title)|url_encode }}" 
+                       target="_blank" 
+                       class="btn btn-primary"
+                       style="margin-right: 10px;">
+                        Contact Poster
+                    </a>
+                {% endif %}
+                <a href="{{ path('home') }}" class="btn btn-secondary">← Back to All Ads</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

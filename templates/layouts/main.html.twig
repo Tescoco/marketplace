@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="navbar-container">
+        <a href="{{ path('home') }}" class="navbar-brand">
+            <img src="{{ asset('jiji.png') }}" alt="Jiji Logo">
+        </a>
+        <ul class="navbar-menu">
+            <li><a href="{{ path('home') }}">Browse Ads</a></li>
+            {% if is_granted('ROLE_USER') %}
+                <li><a href="{{ path('my_ads') }}">My Ads</a></li>
+                <li><a href="{{ path('new_ads') }}" class="btn-primary">Post Ad</a></li>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('category_list') }}">Categories</a></li>
+                    <li><a href="{{ path('users') }}">Users</a></li>
+                {% endif %}
+                <li class="user-info">
+                    {{ app.user.email }}
+                </li>
+                <li><a href="{{ path('app_logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ path('app_login') }}">Login</a></li>
+                <li><a href="{{ path('app_register') }}" class="btn-primary">Register</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+<!-- Flash Messages -->
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="container">
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<!-- Main Content -->
+<div class="container">
+    {% block page_header %}
+        <div class="page-header">
+            <h1>{% block page_title %}{% endblock %}</h1>
+            {% block page_actions %}{% endblock %}
+        </div>
+    {% endblock %}
+    
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
